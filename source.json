@@ -1,0 +1,11 @@
+{
+  "owner": "xalvarez",
+  "repo": "prevent-file-change-action",
+  "version": "v3.0.0",
+  "commit_sha": "8ba6c9f0f3c6c73caea35ae4b13988047f9cd104",
+  "url": "https://github.com/xalvarez/prevent-file-change-action",
+  "policy_sha": "ff50f15e4b79bfbf764dafdfd2579175a6ea9771",
+  "test_policy_sha": "843adf9e4b8f85d0c08b27b9d0b09dd094b54702",
+  "test_agent_version": "1",
+  "harden_agent_version": "1"
+}
