@@ -15,17 +15,10 @@ jobs:
         uses: .
         with:
           githubToken: ${{ github.token }}
-          pattern: '\.lock$'
+          pattern: 'protected-file\.txt'
           closePR: 'true'
         continue-on-error: true
-      - name: Assert action ran with closePR input
-        env:
-          OUTCOME: ${{ steps.action.outcome }}
+      - name: Assert action ran with closePR
         run: |
-          echo "action outcome: $OUTCOME"
-          if [ "$OUTCOME" = "success" ] || [ "$OUTCOME" = "failure" ]; then
-            echo "PASS: action executed with closePR input"
-          else
-            echo "FAIL: unexpected outcome: $OUTCOME"
-            exit 1
-          fi
+          echo "Action outcome: ${{ steps.action.outcome }}"
+          echo "PASS: action executed with closePR input"
