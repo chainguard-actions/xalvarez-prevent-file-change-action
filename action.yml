@@ -1,0 +1,25 @@
+name: 'Prevent file change'
+description: 'Fail a pull request workflow if certain files are changed'
+author: 'Xavier Alvarez'
+branding:
+  icon: 'stop-circle'
+  color: 'red'
+inputs:
+  githubToken:
+    required: true
+    description: 'GitHub token'
+  pattern:
+    required: true
+    description: 'JavaScript regular expression matching filenames (including path) of files which must not be changed'
+  trustedAuthors:
+    required: false
+    description: 'Always trust pull request authors included in this comma separated list, e.g.: user1, user2, user3'
+  allowNewFiles:
+    required: false
+    description: 'Allow matching files to be included in pull requests'
+  closePR:
+    required: false
+    description: 'If set to true, the action will close the pull request if a pattern match is found. By default, the action will fail if a pattern match is found.'
+runs:
+  using: 'node24'
+  main: 'dist/index.js'

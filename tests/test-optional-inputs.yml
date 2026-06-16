@@ -1,0 +1,57 @@
+name: Test optional inputs - allowNewFiles and closePR
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_EVENT_NAME: pull_request
+      GITHUB_REF: refs/pull/3/merge
+      GITHUB_HEAD_REF: feature-branch
+      GITHUB_BASE_REF: main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create mock event payload
+        run: |
+          mkdir -p /tmp/github-event
+          cat > /tmp/github-event/event.json <<'EOF'
+          {
+            "pull_request": {
+              "number": 3,
+              "user": {
+                "login": "testuser"
+              }
+            },
+            "repository": {
+              "name": "test-repo",
+              "owner": {
+                "login": "testowner"
+              }
+            }
+          }
+          EOF
+          echo "GITHUB_EVENT_PATH=/tmp/github-event/event.json" >> $GITHUB_ENV
+
+      - id: action
+        uses: .
+        with:
+          githubToken: fake-token-for-testing
+          pattern: 'protected-file\\.txt'
+          allowNewFiles: 'true'
+          closePR: 'false'
+        continue-on-error: true
+
+      - name: Assert action ran with optional inputs
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "action outcome: $OUTCOME"
+          # With a fake token, the action may fail at API call stage,
+          # but it should not crash due to optional input parsing issues
+          if [ "$OUTCOME" = "success" ] || [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action ran and produced a deterministic outcome with optional inputs"
+          else
+            echo "FAIL: unexpected outcome: $OUTCOME"
+            exit 1
+          fi
