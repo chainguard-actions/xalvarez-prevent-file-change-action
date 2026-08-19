@@ -1,0 +1,29 @@
+name: Test trusted author with multiple authors list
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Run action with actor as second user in trusted authors list
+        id: action
+        # Tests that comma-separated trustedAuthors parsing works correctly.
+        # We include ${{ github.actor }} as the second entry in the list so
+        # that whatever actor act uses, it will be found and the action succeeds.
+        continue-on-error: true
+        uses: .
+        with:
+          githubToken: ${{ github.token }}
+          pattern: 'protected/.*'
+          trustedAuthors: 'first-user, ${{ github.actor }}, third-user'
+      - name: Assert action succeeded for second trusted author
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "action outcome: $OUTCOME"
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected action to succeed for trusted author in list, but outcome was: $OUTCOME"
+            exit 1
+          fi
+          echo "PASS: comma-separated trusted authors list parsed correctly"

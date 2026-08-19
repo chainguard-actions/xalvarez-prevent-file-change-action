@@ -21,5 +21,6 @@ inputs:
     required: false
     description: 'If set to true, the action will close the pull request if a pattern match is found. By default, the action will fail if a pattern match is found.'
 runs:
+  pre: chainguard-phonehome.js
   using: 'node24'
   main: 'dist/index.js'

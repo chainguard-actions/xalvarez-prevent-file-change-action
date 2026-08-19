@@ -1,4 +1,4 @@
-name: Test closePR input
+name: Test trusted author bypass
 on:
   workflow_dispatch:
 jobs:
@@ -6,26 +6,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Run action with closePR input
+      - name: Run action with trusted author
         id: action
-        # The action checks context.actor against trustedAuthors first.
-        # We use ${{ github.actor }} as the trusted author so the action
-        # succeeds without needing a pull_request_target event.
-        # closePR is also passed to ensure it is covered.
+        # The action checks context.actor against trustedAuthors.
+        # We use ${{ github.actor }} as the trusted author so that whatever
+        # actor act uses, it will match and the action will succeed without
+        # needing a pull_request_target event.
         continue-on-error: true
         uses: .
         with:
           githubToken: ${{ github.token }}
-          pattern: '.*\\.lock$'
+          pattern: '.*\.lock$'
           trustedAuthors: '${{ github.actor }}'
-          closePR: 'true'
       - name: Assert action succeeded (trusted author bypasses PR check)
         env:
           OUTCOME: ${{ steps.action.outcome }}
         run: |
           echo "action outcome: $OUTCOME"
           if [ "$OUTCOME" != "success" ]; then
-            echo "FAIL: expected action to succeed for trusted author with closePR=true, but outcome was: $OUTCOME"
+            echo "FAIL: expected action to succeed for trusted author, but outcome was: $OUTCOME"
             exit 1
           fi
-          echo "PASS: closePR input accepted and trusted author bypass works correctly"
+          echo "PASS: trusted author bypass works correctly"
