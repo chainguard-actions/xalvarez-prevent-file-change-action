@@ -1,0 +1,34 @@
+name: Test trusted author bypass
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Get current actor
+        id: get-actor
+        run: |
+          echo "actor=${{ github.actor }}" >> "$GITHUB_OUTPUT"
+          echo "Current actor: ${{ github.actor }}"
+
+      - name: Run action with actor as trusted author
+        id: action
+        uses: .
+        with:
+          githubToken: ${{ github.token }}
+          pattern: '.*\.lock$'
+          trustedAuthors: ${{ steps.get-actor.outputs.actor }}
+        continue-on-error: true
+
+      - name: Assert action succeeded for trusted author
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected action to succeed for trusted author, but outcome was: $OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly succeeded for trusted author"

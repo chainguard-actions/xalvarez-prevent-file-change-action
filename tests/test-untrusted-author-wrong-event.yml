@@ -1,0 +1,28 @@
+name: Test untrusted author with wrong event
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Run action with a different user as trusted author (not the current actor)
+        id: action
+        uses: .
+        with:
+          githubToken: ${{ github.token }}
+          pattern: '.*\.lock$'
+          trustedAuthors: "some-other-user-who-is-not-the-actor"
+        continue-on-error: true
+
+      - name: Assert action failed because actor is not trusted and event is wrong
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail when actor is not trusted and event is not pull_request_target, but outcome was: $OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly failed for untrusted author with non-pull_request_target event"

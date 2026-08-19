@@ -1,0 +1,27 @@
+name: Test wrong event type
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Run action (expect failure for non-pull_request_target event)
+        id: action
+        uses: .
+        with:
+          githubToken: ${{ github.token }}
+          pattern: '.*\.lock$'
+        continue-on-error: true
+
+      - name: Assert action failed with correct message
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail for non-pull_request_target event, but outcome was: $OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly failed for non-pull_request_target event"
