@@ -10,6 +10,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 |---------|-----|-----------------|------------------|
 | v3.0.0 | [`v3.0.0`](https://github.com/chainguard-actions/xalvarez-prevent-file-change-action/tree/v3.0.0) | [`8ba6c9f`](https://github.com/xalvarez/prevent-file-change-action/commit/8ba6c9f0f3c6c73caea35ae4b13988047f9cd104) | [`HARDENING.md`](https://github.com/chainguard-actions/xalvarez-prevent-file-change-action/blob/v3.0.0/HARDENING.md) |
 | v3.0.1 | [`v3.0.1`](https://github.com/chainguard-actions/xalvarez-prevent-file-change-action/tree/v3.0.1) | [`dbc67c2`](https://github.com/xalvarez/prevent-file-change-action/commit/dbc67c205c9ed02aa39c497b422c24f364c3e8dd) | [`HARDENING.md`](https://github.com/chainguard-actions/xalvarez-prevent-file-change-action/blob/v3.0.1/HARDENING.md) |
+| v3.0.2 | [`v3.0.2`](https://github.com/chainguard-actions/xalvarez-prevent-file-change-action/tree/v3.0.2) | [`440fe09`](https://github.com/xalvarez/prevent-file-change-action/commit/440fe0989b54093ce834a504af595ee55967da4d) | [`HARDENING.md`](https://github.com/chainguard-actions/xalvarez-prevent-file-change-action/blob/v3.0.2/HARDENING.md) |
 
 ## Privacy
 
